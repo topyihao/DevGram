@@ -1,25 +1,26 @@
-DevGram — Develop Anywhere From Your Phone
+# DevGram — Develop Anywhere From Your Phone
 
 Turn your Telegram chat into a developer terminal. Create projects, run shell commands, and drive a tmux pane running your coding agent (e.g., Codex/Claude Code) — all from your phone.
 
-What you can do
+## What You Can Do
 
 - Run shell commands in a persistent per-chat session (with `cd`, `source`, env persistence).
 - Drive a live tmux pane (term mode) that runs your Codex/Claude Code terminal.
 
 The goal is to mimic a developer terminal over Telegram and optionally drive your existing Codex/Claude Code terminal running in tmux.
 
-Security note: This bot can execute arbitrary commands. Restrict access via `TELEGRAM_ALLOWED_USER_IDS` and optionally run it in a sandboxed environment (container/vm) and scoped workspace.
+### Security Note
+This bot can execute arbitrary commands. Restrict access via `TELEGRAM_ALLOWED_USER_IDS` and run it under a locked‑down user or container. Set `WORKSPACE_DIR` to a safe project root.
 
-Quick Start
+## Quick Start
 
-1) Prerequisites
+### Prerequisites
 
 - Python 3.10+
 - tmux (for term mode): `brew install tmux` (macOS) or your distro’s package
 - A Telegram Bot token from @BotFather
 
-2) Install dependencies
+### Install
 
 ```
 python -m venv .venv
@@ -27,7 +28,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3) Configure environment
+### Configure
 
 Copy `.env.example` to `.env` and fill in values:
 
@@ -37,13 +38,13 @@ Copy `.env.example` to `.env` and fill in values:
 - `PROJECTS_DIR`: root folder where new projects are created
 - `TMUX_CAPTURE_LINES`, `TMUX_TIMEOUT_SECONDS`: term mode tuning
 
-4) Run the bot
+### Run
 
 ```
 python -m bot.bot
 ```
 
-Usage Walkthrough
+## Usage Walkthrough
 
 1) Start a chat with your bot in Telegram, send `/start`.
 
@@ -53,11 +54,11 @@ Usage Walkthrough
 - `shell` — run shell commands with persistent cwd/env
 - `term` — send to a bound tmux pane (your Codex/Claude terminal)
 
-4) Example flows
+### Examples
 - Shell: `/mode shell`, then `cd app && ls -la`, `source .env`, `export DEBUG=1`
 - Term: create a project (below), open the deep link, then `/mode term` and send instructions
 
-Commands
+## Commands
 
 - `/start` — Welcome + usage summary
 - `/help` — Detailed help
@@ -79,38 +80,38 @@ Commands
 - `/term_send <text>` — Send text to the bound tmux pane and capture output
 - `/term_capture` — Fetch the latest tmux pane tail without sending
 
-Project defaults
+### Project Defaults
 - On `/newproject`, the bot creates a Python virtualenv `.venv` in the project folder, activates it in the tmux session, and starts your agent command.
 - Set `TMUX_CODEX_CMD` in `.env` (default `codex`), e.g., `codex` or `claude code` (or an activation + cmd chain).
 - The initial terminal output (first‑run approvals, etc.) is captured and sent to the chat so you can respond.
   
 
-Message routing
+## Message Routing
 
 - Plain messages follow the current `/mode`.
 - Triple-backtick code blocks are detected:
   - ```bash ...``` or ```sh ...``` → shell
   - Otherwise falls back to current mode
 
-Persistence
+## Persistence
 
 - Each chat has an in-memory session (cwd + env) and term target + snapshot.
 - Optional JSON persistence in `data/` is implemented for simplicity.
 
-Safety recommendations
+## Safety & Deployment
 
 - Run on a locked-down machine or container.
 - Use a dedicated Unix user with minimal privileges.
 - Set `WORKSPACE_DIR` to a safe project folder.
 - Keep `TELEGRAM_ALLOWED_USER_IDS` strict.
 
-Development notes
+## Development Notes
 
 - The bot uses `python-telegram-bot` for polling and tmux for term mode.
 
-Term Mode (tmux + Coding Agent)
+## Term Mode (tmux + Coding Agent)
 
-Step-by-step
+### Step-by-Step
 
 1) Start or identify a pane running your Codex/Claude Code terminal
 
@@ -126,7 +127,7 @@ tmux new -s codex
 echo hello world
 ```
 
-Projects workflow
+## Projects Workflow
 
 1) Create and open a dedicated chat
 
@@ -142,20 +143,20 @@ Projects workflow
 /mode term
 ```
 
-How it works
+### How It Works
 - The bot immediately acknowledges with "Working..." after you send a message.
 - When done, it edits that message with the final output. If the output is too large for a single Telegram message, it edits to "Done. Output attached." and sends the output as a file.
 
-Tuning
+### Tuning
 - `.env` `TMUX_CAPTURE_LINES=1200` — more lines if outputs are large
 - `.env` `TMUX_TIMEOUT_SECONDS=20` — increase for slower responses
 
-Concurrency
+### Concurrency
 - Operations are serialized per pane to prevent interleaving when multiple chats target the same pane.
 
   
 
-Troubleshooting
+## Troubleshooting
 
 - PTB error about `AIORateLimiter` or Updater:
   - Ensure deps are up to date: `pip install -r requirements.txt --upgrade` (uses python-telegram-bot>=21)
@@ -167,7 +168,7 @@ Troubleshooting
 - Shell mode path errors:
   - Paths are clamped within `WORKSPACE_DIR`.
  
-Ubuntu/Linux Install
+## Ubuntu/Linux Install
 
 - Install system packages (Debian/Ubuntu):
   - `sudo apt update`
@@ -185,8 +186,8 @@ Ubuntu/Linux Install
 - Run:
   - `python -m bot.bot`
 
-- Optional systemd service (runs on boot):
-- Create `/etc/systemd/system/devgram.service`:
+### Optional systemd service (runs on boot)
+ - Create `/etc/systemd/system/devgram.service`:
     
     ```ini
     [Unit]
