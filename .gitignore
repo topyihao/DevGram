@@ -1,0 +1,41 @@
+.DS_Store
+.ds_store
+
+# Environment
+.env
+.env.local
+.python-version
+
+# Virtual environments
+.venv/
+venv/
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+coverage.xml
+htmlcov/
+
+# App data (sessions/auth)
+data/
+projects/
+
+# Editors/IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
