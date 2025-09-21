@@ -5,7 +5,7 @@ Turn your Telegram chat into a developer terminal. Create projects, run shell co
 ## What You Can Do
 
 - Run shell commands in a persistent per-chat session (with `cd`, `source`, env persistence).
-- Drive a live tmux pane (term mode) that runs your Codex/Claude Code terminal.
+- Drive a tmux pane (term mode) that runs your Codex/Claude Code terminal.
 
 The goal is to mimic a developer terminal over Telegram and optionally drive your existing Codex/Claude Code terminal running in tmux.
 
@@ -81,7 +81,7 @@ python -m bot.bot
 - `/term_capture` — Fetch the latest tmux pane tail without sending
 
 ### Project Defaults
-- On `/newproject`, the bot creates a Python virtualenv `.venv` in the project folder, activates it in the tmux session, and starts your agent command.
+- On `/new`, the bot creates a Python virtualenv `.venv` in the project folder, activates it in the tmux session, and starts your agent command.
 - Set `TMUX_CODEX_CMD` in `.env` (default `codex`), e.g., `codex` or `claude code` (or an activation + cmd chain).
 - The initial terminal output (first‑run approvals, etc.) is captured and sent to the chat so you can respond.
   
@@ -110,22 +110,6 @@ python -m bot.bot
 - The bot uses `python-telegram-bot` for polling and tmux for term mode.
 
 ## Term Mode (tmux + Coding Agent)
-
-### Step-by-Step
-
-1) Start or identify a pane running your Codex/Claude Code terminal
-
-```
-tmux new -s codex
-# in the new window, start your CLI (e.g., codex/claude terminal)
-```
-
-2) Switch to term mode and send (after binding a project)
-
-```
-/mode term
-echo hello world
-```
 
 ## Projects Workflow
 
